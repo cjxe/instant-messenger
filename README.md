@@ -1,20 +1,21 @@
 # Instant Messenger
 
 
-## Getting Started
+## Task 1
 
-A few packages were used in the process of creating this project. I have listed the ones which are necessary to host the website.
+The first task is to implement a client-server system, which implements an instant messenger
+using **TCP**, allowing users to chat with each other.
 
 ## To Do List
-- [ ] Functioning basic server & client.
-- [ ] When a client connects, display a message.
+- [X] **Functioning** basic **server & client**.
+- [X] When a client **connects, display a message**.
 - [ ] **More than 1 client** can connect.
-- [ ] Use a dictionary to store all the current connections.
+- [ ] Use a **dictionary** to **store** all the **current connections**.
 - [ ] Client can send **custom messages**.
 - [ ] Clients can send **multiple messages**.
-- [ ] Clients can enter a username.
-- [ ] Usernames displayed in front of each message.
-- [ ] When a client disconnects, display a message.
+- [ ] **Clients** can **enter** a **username**.
+- [ ] **Usernames displayed** in front of each message.
+- [ ] When a client **disconnects, display a message**.
 - [ ] Make sure the server does not crash (when someone leaves).
 
 - [ ] `server.log` is produced when the server is run.
