@@ -18,7 +18,7 @@ using **TCP**, allowing users to chat with each other. The instant messenger wil
 #### Server can:
 - [X] have **multiple clients** connected.
 - [X] **display client's username** in front of each message.
-- [ ] use a **dictionary** to **store** all the **current connections**.
+- [ ] use a **dictionary** to **store** all the **current connections**. CURRENTLY WORKING ON THIS!
 - [X] **display a message** when a **client connects**.
 - [X] **display a message** when a **client disconnects**.
 
@@ -38,23 +38,23 @@ using **TCP**, allowing users to chat with each other. The instant messenger wil
 ## Task 2 Application Protocol
 In order to extend our instant messenger with further features we need to define a proper protocol between client and server. Protocols define the format and order of messages sent and received among network entities, and actions taken on message transmission and receipt. 
 
-#### Client(s) can: 
+#### Both server and client(s) can: 
 - [ ] send messages to **everyone**. (`/all {text}`)
 - [ ] send messages to **certain people**. (`/whisper {username} {text}`)
 - [ ] requests a list of all current users. (`/who`) 
-- [ ] choose a **new username**. (`/newname {new_username}`)
-- [ ] use `/help`, i.e. show all available commands.
-- [X] leave the chat. (`/disconnect`)
+- [ ] choose a **new username**. (`/newname {new_username}`) [USER ONLY!]
+- [ ] use `/help`, i.e. show all available commands. [USER ONLY!]
+- [X] leave the chat. (`/disc`) [USER ONLY!]
 
 #### Error/Exception Handling
 Handle all protocol errors appropriately. This includes unknown messages, whispering to a
 non-existing user, etc.
 
-### Prerequisites
+## Prerequisites
 
 [Python 3.8.5](https://www.python.org/downloads/release/python-385/) or newer.
 
-### Installing
+## Installing
 
 ...
 
