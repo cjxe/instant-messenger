@@ -1,8 +1,7 @@
 import socket
 import threading
-import sys
 
-HEADER = 10 # 10 bytes
+HEADER = 60 # 60 bytes
 server_IP = '' # ipv4 10.249.212.98
 server_port = 8091
 server_address = (server_IP, server_port)
@@ -23,17 +22,24 @@ def start_server(): # handle new connections and distribute where to go from her
     
 
 def handle_client(client_socket, client_address): # handles individual connection with the client and the server
-    print(f"Connection from {client_address} has been establised.")
+    print(f"[SERVER] Connection from {client_address} has been establised.")
     client_username = client_socket.recv(HEADER).decode() ## handle error, same username kick
-
-    #welcome_msg = "Welcome to the server!"
-    #client_socket.send(welcome_msg.encode())
+    if client_username == '':
+        print(f"[SERVER] {client_address} has been kicked. Reason: Invalid username.")
+        client_socket.close()
+        exit()
+    else:
+        print(f"[SERVER] User {client_username} has joined the chat.") # to all
     
     connected = True
     while connected:        
         client_msg = client_socket.recv(HEADER).decode()
 
+        if client_msg == '':
+            continue
+
         if client_msg == "/disc": ## if client_msg == user_commands:
+            print(f"[SERVER] User {client_username} has left the chat.") # to all
             connected = False
 
         #if client_msg == f"/pm {client_username}":

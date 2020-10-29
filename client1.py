@@ -1,42 +1,42 @@
 import socket
 import sys
 
-"""
-HEADER = 10
-server_IP = '' # ipv4 10.249.212.98
-server_port = 8090
-server_address = (server_IP, server_port)
-"""
-
-
-def start_client():
-    server_IP = ''
-    server_port = 8091
-    HEADER = 10
-
-    client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    print("Client socket is created.")
-    client_socket.connect((socket.gethostname(), server_port))
-    print("Client has conncted to the server.")
-
-    username = sys.argv[1]
+def set_username(username):
     if len(username) < HEADER:
-        if client_socket.send(username.encode()) == True:
-            print(f"Username {username} created successfully.") #if same username, disconnect
+        print(f"Username {username} created successfully.")
+        client_socket.send(username.encode())
     else:
         print("ERROR: Username too long.")
         print("Client socket is terminating...")
         client_socket.close()
 
- # sending the username
-    #server_msg = client_socket.recv(1024)
-    #print(server_msg.decode())
-    
-    while True:
-        client_msg = input("Send a message to the server: ")
-        client_socket.send(client_msg.encode())
+server_IP = ''              #argv[2]
+server_port = 8091          #argv[3]
+HEADER = 60
+#server_address = (server_IP, server_port)
+
+client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+print("Client socket is created.")
+client_socket.connect((socket.gethostname(), server_port))
+
+## START OF trying to set a valid username ##
+try:
+    set_username(sys.argv[1])
+except IndexError:
+    print("ERROR: Username not set.")
+    print("Client socket is terminating...")
+    client_socket.close()
+    exit()
+## END OF trying to set a valid username ##
 
 
+connected = True
+while connected:
+    print("You have conncted to the server.")
+    client_msg = input("Send a message to the server: ")
+    client_socket.send(client_msg.encode())
 
-if __name__ == "__main__": 
-    start_client()
+    if client_msg == "/disc": # disc for disconenct
+        print(f"You have left the chat.")
+        connected = False    
+

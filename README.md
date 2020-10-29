@@ -1,29 +1,54 @@
 # Instant Messenger
 
 
-## Task 1
+## Task 1: Implement a simple instant messenger 
 
 The first task is to implement a client-server system, which implements an instant messenger
-using **TCP**, allowing users to chat with each other.
+using **TCP**, allowing users to chat with each other. The instant messenger will consist of a client and a server program.
 
-## To Do List
-- [X] **Functioning** basic **server & client**.
-- [X] When a client **connects, display a message**.
-- [X] Client can send **custom messages**.
-- [X] Clients can send **multiple messages**.
-- [X] **More than 1 client** can connect.
-- [ ] Use a **dictionary** to **store** all the **current connections**.
-- [X] **Clients** can **enter** a **username**.
-- [ ] **Usernames displayed** in front of each message.
-- [ ] When a client **disconnects, display a message**.
-- [ ] Make sure the server does not crash (when someone leaves).
+### To Do List
+- [X] Create a **basic** functioning **server & client**.
 
-- [ ] `server.log` is produced when the server is run.
+#### Client(s) can: 
+- [X] send **custom message(s)**.
+- [X] send **multiple messages**.
+- [X] **enter** a **username**. 
+- [ ] **see** other clients' **messages**.
 
-The log should contain information about:
-- [ ] all clients connecting/disconnecting
-- [ ] any sent messages
+#### Server can:
+- [X] have **multiple clients** connected.
+- [X] **display client's username** in front of each message.
+- [ ] use a **dictionary** to **store** all the **current connections**.
+- [X] **display a message** when a **client connects**.
+- [X] **display a message** when a **client disconnects**.
 
+#### Error/Exception Handling
+- [X] Make sure the server does not crash when someone leaves.
+- [ ] Ensure that when a client drops out, that connection is removed from the dictionary.
+- [ ] Display a message when a client **drops out**.
+- [X] The server should not allow any client to send messages without a username.
+- [ ] If the server is not available or port/hostname are wrong, an error message detailing the issue should be printed.
+- [ ] Clients crashing or losing connection should not impact the server or other clients.
+- [ ] In case of a crash, attempt to close remaining connections and print an error message to the `log` file.
+
+#### Produce a `server.log` such that it contains information about:
+- [ ] all clients connecting/disconnecting.
+- [ ] any sent messages.
+
+## Task 2 Application Protocol
+In order to extend our instant messenger with further features we need to define a proper protocol between client and server. Protocols define the format and order of messages sent and received among network entities, and actions taken on message transmission and receipt. 
+
+#### Client(s) can: 
+- [ ] send messages to **everyone**. (`/all {text}`)
+- [ ] send messages to **certain people**. (`/whisper {username} {text}`)
+- [ ] requests a list of all current users. (`/who`) 
+- [ ] choose a **new username**. (`/newname {new_username}`)
+- [ ] use `/help`, i.e. show all available commands.
+- [X] leave the chat. (`/disconnect`)
+
+#### Error/Exception Handling
+Handle all protocol errors appropriately. This includes unknown messages, whispering to a
+non-existing user, etc.
 
 ### Prerequisites
 
