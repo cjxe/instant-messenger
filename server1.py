@@ -1,9 +1,10 @@
 import socket
 import threading
+import sys
 
 HEADER = 10 # 10 bytes
 server_IP = '' # ipv4 10.249.212.98
-server_port = 8090
+server_port = 8091
 server_address = (server_IP, server_port)
 
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # INET for ipv4
@@ -23,17 +24,22 @@ def start_server(): # handle new connections and distribute where to go from her
 
 def handle_client(client_socket, client_address): # handles individual connection with the client and the server
     print(f"Connection from {client_address} has been establised.")
+    client_username = client_socket.recv(HEADER).decode() ## handle error, same username kick
+
     #welcome_msg = "Welcome to the server!"
     #client_socket.send(welcome_msg.encode())
     
     connected = True
-    while connected:
+    while connected:        
         client_msg = client_socket.recv(HEADER).decode()
 
-        if client_msg == "!disc":
+        if client_msg == "/disc": ## if client_msg == user_commands:
             connected = False
 
-        print(f"{client_address}: {client_msg}")
+        #if client_msg == f"/pm {client_username}":
+         #   print('test')            
+
+        print(f"{client_username}: {client_msg}")
 
     client_socket.close()
 
