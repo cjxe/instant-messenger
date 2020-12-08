@@ -1,1 +1,3 @@
-/worddoc.docx
+*.docx
+*.pdf
+*.sh
