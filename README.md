@@ -1,4 +1,7 @@
-# Instant Messenger 💬
+<h1 align="center">
+	Instant Messenger 💬
+</h1>
+
 A messaging board which accepts multiple users and various commands using "sockets".
 
 ## Task 1: Implement a simple instant messenger 
@@ -38,13 +41,13 @@ using **TCP**, allowing users to chat with each other. The instant messenger wil
 In order to extend our instant messenger with further features we need to define a proper protocol between client and server. Protocols define the format and order of messages sent and received among network entities, and actions taken on message transmission and receipt. 
 
 #### Server can: 
-- [ ] use `/help` to **show all available commands**. (`/help`)
-- [ ] requests a **list of all current users**. (`/who`)
-- [ ] send messages to **everyone**. (`/all <text>`) [SERVER ONLY!]
-- [ ] send messages to a **specific user**. (`/pm <user> <message>`)
+- [X] use `/help` to **show all available commands**. (`/help`)
+- [X] requests a **list of all current users**. (`/who`)
+- [X] send messages to **everyone**. (`/all <message>`) [SERVER ONLY!]
+- [X] send messages to a **specific user**. (`/pm <user> <message>`)
 - [ ] **kick** a user. (`/kick <user>`)
 - [ ] **ban** a user. (`/ban <user>`)
-- [ ] **stop** the server. (`/stop`) [SERVER ONLY!]
+- [X] **stop** the server. (`/stop`) [SERVER ONLY!]
 
 
 #### Client(s) can:
@@ -60,7 +63,8 @@ non-existing user, etc.
 
 ## Prerequisites
 
-[Python 3.8.5](https://www.python.org/downloads/release/python-385/) or newer.
+- [Python 3.8.5](https://www.python.org/downloads/release/python-385/) or newer
+	- external libraries
 
 ## Installing
 [Click here](https://github.com/cjxe/instant-messenger/archive/master.zip) to download **or** copy 

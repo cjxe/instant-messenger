@@ -1,6 +1,6 @@
-import sys, os, json
 import socket
 import threading
+import sys, os, json, time
 import curses
 from curses.textpad import Textbox, rectangle
 from termcolor import colored, cprint
@@ -8,8 +8,8 @@ import colorama
 
 
 # Constants
-SERVER_IP = socket.gethostname() # default = sys.argv[2]
-SERVER_PORT = 8092 # sys.argv[3]   # default = 
+SERVER_IP = sys.argv[2]             # default = socket.gethostname()
+SERVER_PORT =  int(sys.argv[3])     # default = 8092 
 SERVER_ADDRESS = (SERVER_IP, SERVER_PORT)
 lines = ['Hi! Start typing messages for them to appear here.']
 
@@ -37,7 +37,6 @@ def set_username(username):
     """This function is mostly for error correcting and then sending the
     username to the server."""
     if len(username) <= 12:
-        cprint(f'Username "{username}" created successfully.', 'green')
         connect_to_server(client_socket, SERVER_IP, SERVER_PORT)
         packet = {'sender':username, 'command':'join'}
         packet_str = json.dumps(packet) # The reason why we stringified (or
@@ -51,6 +50,7 @@ def set_username(username):
             client_socket.close()
             exit()
         elif confirmation == 'Username accepted.':
+            cprint(f'Username "{username}" created successfully.', 'green')
             return username 
     elif len(username) > 12:
         cprint('Username too long, should be less than 12 characters!', 'red')
@@ -120,7 +120,7 @@ def main(stdscr):
                     packet_str = json.dumps(packet)
                     client_socket.send(packet_str.encode('utf-8'))
             except IndexError: # User input is blank
-                cprint('Please type something!', 'red')
+                lines.append('Please type something!')
             except Exception: # EOFError or KeyboardInterrupt or ConnectionLost
                 cprint('You have left the chat. Reason: Connection lost to the server', 'red')
                 try:
@@ -142,8 +142,9 @@ if __name__ == '__main__':
         cprint('Client socket is terminating...', 'magenta')
         client_socket.close()
         exit()
-    
+    time.sleep(0.2)
     cprint('Joining the chat...','yellow')
+    time.sleep(0.5)
     curses.wrapper(main)
 
         

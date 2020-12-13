@@ -1,12 +1,10 @@
 ###############################################################################
-check spelling on word 
 
 ###############################################################################
 ################################## COMMANDS ###################################
 ###############################################################################
 
 ### Messages that can be sent by the user/client
-
 ('<' and '>' are placeholders)
 
 /who
@@ -39,23 +37,53 @@ check spelling on word
 	/help              | All commands.'
 
 
+### Messages that can be sent by the server
 ('<' and '>' are placeholders)
+
+/who
+-Description: Return the list of all online users.
+--Response to server: 'All online users ["<user_1>", "<user_2>"]
+	Clients = {'<user_1>': <socket.socket ... (..., 56435)>, '<user_2>': <...>}'
+
+/all <message>
+-Description: Message all users.
+--Response to server: 'Message sent.'
+--Response to all: 'SERVER: <message>'
+
+/stop
+-Description: Stops the server.
+--Response to server: 'Server shutting down in 3..2..1..'
+--Response to all: 'Server shutting down in 3..2..1..'
+
+/help
+-Description: Returns the list of all available commands.
+--Response to server:
+    'Available commands:
+    	/who               | List of online users.
+    	/all <message>     | Message all users.
+    	/pm <to> <message> | Whisper to a user.
+    	/stop              | Stop the server.
+    	/help              | All commands.'
+
 
 ###############################################################################
 ################################## DESIGN #####################################
 ###############################################################################
 
 Threads are very easy to set up when running two different functions at the 
-same time (i.e listening and sending messages to the server) thus that's the
-main reason I set up the client with threading.
+same time (i.e. listening and sending messages to the server) thus that is the
+main reason I set up the client and the server with threading.
 
-Messages are sent in JSON format (but since that's not possible, the client 
-stringifies/dumps the created JSON object and sends that string to the server) 
+Users are stored in a dictionary and username is matched to a socket for 
+clarity purposes.
+
+Messages are sent in JSON format (but since that is not possible, the client 
+dumps/stringifies the created JSON object and sends that string to the server) 
 which is easier and more organised way to handle messages instead of sending a 
 single string with no additional info.
 
 After server receiving the message from the user, the JSON object is loaded and
-necessary steps are followed to decode the message (i.e if it's a normal
+necessary steps are followed to decode the message (i.e. if it is normal
 message, the message is broadcasted to every user however if the message
 includes a command, then the server decides what to do according to the code).
 

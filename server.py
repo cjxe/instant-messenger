@@ -1,15 +1,16 @@
 import socket
 import select
+import threading
 import sys, os, json, time
-import logging
 from time import gmtime, strftime
+import logging
 from termcolor import colored, cprint
 import colorama
 
 
 # Constants
 SERVER_IP = socket.gethostname()    # ipv4
-SERVER_PORT = 8092                  #sys.argv[2]
+SERVER_PORT = int(sys.argv[1])      # default = 8092 
 SERVER_ADDRESS = (SERVER_IP, SERVER_PORT)
 
 
@@ -68,7 +69,7 @@ def broadcast_message_but_sender(message, incoming_socket):
     data = message['data']
 
     for socket in clients:
-        if incoming_socket != clients[socket] : # everyone excluding the sender
+        if incoming_socket != clients[socket]: # everyone excluding the sender
             clients[socket].send(f'{sender}: {data}'.encode('utf-8'))
     logging.info(f'MESSAGE {message["sender"]} \"{message["data"]}\"')
 
@@ -77,7 +78,7 @@ def broadcast(string):
     for socket in clients:
         try:
             clients[socket].send(f'{string}'.encode('utf-8'))
-        except ConnectionResetError as e:
+        except ConnectionResetError or Exception as e:
             continue
 
 def send_pm(message):
@@ -130,10 +131,10 @@ def kick(message, incoming_socket):
     """Kicks the user"""
     sender = message['sender']
 
-    cprint(f'Closed connection from {incoming_socket} aka {sender}! Reason: User input.', 'red')
-    broadcast(f'"{sender}" has left the server!')
+    cprint(f'Closed connection from {incoming_socket} aka "{sender}"! Reason: User input.', 'red')
     logging.info(f'COMMAND {sender} \"/{message["command"]}\"')
     logging.info(f'LEAVE {sender} {incoming_socket.getpeername()}')
+    broadcast(f'"{sender}" has left the server!')
     #clients[sender].close()
     r_list.remove(clients[sender])
     del clients[sender]
@@ -163,6 +164,82 @@ def receive_unknown_command(socket, message):
     logging.error(f'fCOMMAND {sender} \"/{message["data"]}\"')
     clients[sender].send(f'Invalid command "/{data}"! Type "/help" for more.'.encode('utf-8'))
 
+def send_message():
+    """Send message from the server"""
+    while True:
+        try:
+            message = input('')
+            if message[0] == '/':
+                if message.startswith('/all'):
+                    data = message[5:].split(' ', 0)[0]
+                    
+                    logging.info(f'MESSAGE SERVER "/all {data}"')
+                    try:
+                        broadcast(f'SERVER: {data}')
+                        cprint('Message sent.','green')
+                    except Exception as e:
+                        cprint('Failed to send the message!','red')
+                        print(e)
+                        continue
+                elif message.startswith('/pm'):
+                    receiver = message[4:].split(' ', 1)[0]
+                    data = message[4:].split(' ', 1)[1]
+                    if 'SERVER' == receiver:
+                    # If sender is the SERVER
+                        logging.error(f'fCOMMAND SERVER \"/pm {receiver} {data}\"')
+                        cprint('You can not pm yourself!', 'red')
+                        continue
+                    if receiver in clients:
+                        logging.info(f'COMMAND SERVER \"/pm {receiver} {data}\"')
+                        clients[receiver].send(f'From SERVER: {data}'.encode('utf-8'))
+                        cprint('PM sent.', 'green')
+                    else:
+                        # If receiver does not exist
+                        logging.error(f'fCOMMAND SERVER \"/pm {receiver} {data}\"')
+                        cprint(f'User "{receiver}" not found!', 'red')
+                elif message.startswith('/who'):
+                    online_users = []
+                    for online_user in clients:
+                        online_users.append(online_user)
+                    logging.info(f'COMMAND SERVER "/who"')
+                    if online_users == []:
+                        cprint(f'All users are offline!', 'magenta')
+                    else:
+                        cprint(f'All online users {online_users}', 'magenta')
+                        cprint(f'Clients = {clients}', 'magenta')
+                elif message.startswith('/stop'):
+                    logging.info('COMMAND SERVER "/stop"')
+                    broadcast('SERVER: Server shutting down in 3..2..1..')
+                    cprint('Server shutting down in 3..2..1..', 'red')
+                    try:
+                        server_socket.close()
+                        sys.exit(0)
+                    except SystemExit:
+                        os._exit(0)
+                elif message.startswith('/help'):
+                    logging.info(f'COMMAND SERVER "/help"')
+                    cprint('Available commands:\n\
+    /who               | List of online users.\n\
+    /all <message>     | Message all users.\n\
+    /pm <to> <message> | Whisper to a user.\n\
+    /stop              | Stop the server.\n\
+    /help              | All commands.\n\
+        ', 'magenta')
+                else:
+                    # If an unkown command is sent:
+                    logging.error(f'fCOMMAND SERVER "/{message}')
+                    cprint(f'Unkown command "{message}"! Type "/help" for more.', 'red')
+        except IndexError: # User input is blank
+            cprint('Please type something!', 'red')
+        except Exception: # EOFError or KeyboardInterrupt or ConnectionLost
+            logging.error(f'cSHUTDOWN SERVER') # cSHUTDOWN for crash shut down
+            broadcast('Server has unexpectedly shut down!')
+            cprint('Server has unexpectedly shut down. Reason: Crashed', 'red')
+            try:
+                server_socket.close()
+                sys.exit(0)
+            except SystemExit:
+                os._exit(0)
 
 def handle_incoming_connections():
     server_socket.listen(16)  # max 16 connections
@@ -195,7 +272,7 @@ def handle_incoming_connections():
                 # if a user with a username connets
                     r_list.append(client_socket)
                     cprint(f'Connection from {client_address} as {username} has been establised.', 'green')
-                    broadcast(f'{username} has joined the server.') # Letting know everyone someone has joined
+                    broadcast(f'"{username}" has joined the server.') # Letting know everyone someone has joined
                 
                 elif user is False: 
                     # if user leaves (or send nothing)
@@ -232,8 +309,8 @@ def handle_incoming_connections():
                     for usern in clients:
                         if incoming_socket == clients[usern]:
                             cprint(f'Closed connection from {incoming_socket} aka "{usern}"! Reason: User crashed.', 'red')    
-                            broadcast(f'{usern} has suddenly left the server!')
                             logging.info(f'cLEAVE {usern} {incoming_socket.getpeername()}') #cLEAVE is for crashing
+                            broadcast(f'{usern} has suddenly left the server!')
                             r_list.remove(incoming_socket)
                             del clients[usern]  # Delete username + socket from clients{}
                             break
@@ -247,8 +324,12 @@ if __name__ == '__main__':
     logging.info(f'============================={current_date}==============================')
     server_socket = create_socket()
     bind_socket(server_socket, SERVER_IP, SERVER_PORT)
+    cprint('To see the list of commands: type "/help"\n')
 
     r_list = [server_socket]
     clients = {} # Storing clients in a dictionary as {username:socket}
     w_list = []
+
+    send_thread = threading.Thread(target=send_message)
+    send_thread.start()
     handle_incoming_connections()
