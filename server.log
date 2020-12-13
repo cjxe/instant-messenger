@@ -1,0 +1,28 @@
+22:58:46 =============================2020-12-12==============================
+22:58:46 SERVER Server initialising...
+22:58:46 SERVER Listening on ('LAPTOP-IERGHOR1', 8092)
+22:58:53 JOIN 1 ('192.168.1.25', 52546)
+22:58:57 JOIN 2 ('192.168.1.25', 52547)
+22:59:05 JOIN 3 ('192.168.1.25', 52549)
+22:59:07 MESSAGE 3 "hi"
+22:59:10 MESSAGE 2 "hiya"
+22:59:14 MESSAGE 1 "welcome welcome!"
+22:59:20 MESSAGE 2 "i am gonna be number 5"
+22:59:23 COMMAND 2 "/rename 5"
+22:59:29 MESSAGE 3 "yeehaa"
+22:59:33 COMMAND 3 "/"
+22:59:38 COMMAND 3 "/who"
+22:59:39 COMMAND 3 "/whp"
+22:59:48 MESSAGE 3 " /who"
+22:59:52 MESSAGE 3 "hm"
+23:00:12 fCOMMAND 3 "/pm 6 are you online 6?"
+23:00:17 COMMAND 3 "/pm 5 please get out"
+23:00:21 MESSAGE 5 "no"
+23:00:25 COMMAND 5 "/help"
+23:00:38 COMMAND 5 "/rename lets"
+23:00:42 COMMAND 3 "/who"
+23:00:45 COMMAND 3 "/pm lets test"
+23:00:51 COMMAND lets "/leave"
+23:00:51 LEAVE lets ('192.168.1.25', 52547)
+23:00:53 cLEAVE 3 ('192.168.1.25', 52549)
+23:01:47 cLEAVE 1 ('192.168.1.25', 52546)

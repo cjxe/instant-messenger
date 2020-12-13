@@ -1,0 +1,62 @@
+###############################################################################
+check spelling on word 
+
+###############################################################################
+################################## COMMANDS ###################################
+###############################################################################
+
+### Messages that can be sent by the user/client
+
+('<' and '>' are placeholders)
+
+/who
+-Description: Return the list of all online users.
+--Response to sender: 'All online users ["<user_1>", "<user_2>"]'
+
+/pm <to> <message>
+-Description: Whisper to a user.
+--Response to sender: 'To <to>: <message>'
+--Response to receiver: 'From <sender>: <message>'
+
+/rename <new_name>
+-Description: Change client's username.
+--Response to sender: 'Username successfully changed from "<current_name>" -> "<new_name>"'
+--Response to all: '"<current_name>" has changed their name to "<new_name>"!'
+
+/leave
+-Description: Leave the server.
+--Response to sender: 'You have left the chat.'
+--Response to all: '<username> has left the server!'
+
+/help
+-Description: Returns the list of all available commands.
+--Response to sender:
+    'Available commands:
+	/who               | List of online users.
+	/pm <to> <message> | Whisper to a user.
+	/rename <new_name> | Change your username.
+	/leave             | Leave the server.
+	/help              | All commands.'
+
+
+('<' and '>' are placeholders)
+
+###############################################################################
+################################## DESIGN #####################################
+###############################################################################
+
+Threads are very easy to set up when running two different functions at the 
+same time (i.e listening and sending messages to the server) thus that's the
+main reason I set up the client with threading.
+
+Messages are sent in JSON format (but since that's not possible, the client 
+stringifies/dumps the created JSON object and sends that string to the server) 
+which is easier and more organised way to handle messages instead of sending a 
+single string with no additional info.
+
+After server receiving the message from the user, the JSON object is loaded and
+necessary steps are followed to decode the message (i.e if it's a normal
+message, the message is broadcasted to every user however if the message
+includes a command, then the server decides what to do according to the code).
+
+###############################################################################
